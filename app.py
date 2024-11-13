@@ -278,13 +278,25 @@ def main():
     map_col, threshold_col = st.columns([4, 1])  # 4:1 ratio
     
     with map_col:
+        # Define Karnataka bounds
+        KARNATAKA_BOUNDS = [
+            [11.5, 74.0],  # Southwest corner
+            [18.5, 78.5]   # Northeast corner
+        ]
         # Create map
         m = folium.Map(
-            location=[15.3173, 75.7139], 
+            location=[15.3173, 75.7139],  # Center of Karnataka
             zoom_start=7,
-            control_scale=True
+            tiles='OpenStreetMap',
+            min_zoom=7,  # Restrict minimum zoom
+            max_zoom=10,  # Restrict maximum zoom
+            min_lat=KARNATAKA_BOUNDS[0][0],  # Restrict panning
+            max_lat=KARNATAKA_BOUNDS[1][0],
+            min_lon=KARNATAKA_BOUNDS[0][1],
+            max_lon=KARNATAKA_BOUNDS[1][1],
         )
         
+        #Style function for districts
         def style_function(feature):
             district_name = feature['properties']['district']
             if district_name in data[selected_model]:
@@ -300,8 +312,28 @@ def main():
                 'weight': 1,
                 'fillOpacity': 0.4
             }
+        
+        mask = folium.FeatureGroup(name='mask')
 
-        # Add GeoJSON layer
+            # Add white mask around Karnataka
+        mask_coordinates = [
+            [[90, 0], [90, 90], [0, 90], [0, 0]],  # World bounds
+            karnataka_geojson['features'][0]['geometry']['coordinates'][0]  # Karnataka boundary
+        ]
+        
+        folium.Polygon(
+            locations=mask_coordinates,
+            color='white',
+            fill=True,
+            fill_color='white',
+            fill_opacity=0.8,
+        ).add_to(mask)
+        
+        # Add the mask to the map
+        mask.add_to(m)
+
+
+        # Add districts layer
         districts = folium.GeoJson(
             karnataka_geojson,
             style_function=style_function,
@@ -311,15 +343,17 @@ def main():
                 aliases=['District:'],
                 style=("background-color: white; color: #333333; font-family: arial; font-size: 12px; padding: 10px;")
             )
-        )
-        
-        # Add GeoJSON layer to map
-        districts.add_to(m)
+        ).add_to(m)
+
+        # Fit the map to Karnataka bounds
+        m.fit_bounds(KARNATAKA_BOUNDS)
+
         
         # Display map
-        map_data = st_folium(m, width=1000, height=600, key="map")
+        map_data = st_folium(m, width=1000, height=700, key="map")
     
     with threshold_col:
+
         st.markdown("""
             <div style="
                 padding: 15px;
