@@ -6,6 +6,7 @@ import pandas as pd
 import requests
 from typing import Dict, Any
 from shapely.geometry import Point, shape
+import base64
 
 # Set page configuration
 st.set_page_config(
@@ -152,9 +153,109 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 def add_logo():
-    col1, col2 = st.columns([0.5, 4])
-    with col1:
-        st.image("ARTPARK.png", width=160)
+    # Load all logos using base64 encoding
+    logo_artpark = "logo/ARTPARK.png"
+    logo_iisc = "logo/IISC.png"
+    
+    st.markdown(f"""
+        <style>
+        .navbar {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: var(--secondary-background-color);
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }}
+        .navbar .title {{
+            font-size: 36px;
+            font-weight: bold;
+            color: #00B4FF;
+            font-family: Arial, sans-serif;
+        }}
+        .navbar .spacer {{
+            flex-grow: 1;
+        }}
+        .navbar img {{
+            max-height: 60px;
+            width: auto;
+        }}
+        </style>
+        
+        <!-- Navbar -->
+        <div class="navbar">
+            <div class="title">VAANI</div>
+            <div class="spacer"></div>
+            <img src="data:image/png;base64,{base64.b64encode(open(logo_iisc, 'rb').read()).decode()}" alt="IISC Logo">
+            <img src="data:image/png;base64,{base64.b64encode(open(logo_artpark, 'rb').read()).decode()}" alt="ARTPARK Logo">
+        </div>
+    """, unsafe_allow_html=True)
+
+    # # Add a separator line
+    # st.markdown("""
+    #     <hr style="
+    #         height: 1px;
+    #         border-width: 0;
+    #         color: gray;
+    #         background-color: #f0f0f0;
+    #         margin: 10px 0 20px 0;
+    #     ">
+    # """, unsafe_allow_html=True)
+
+    # Add spacing after navbar
+    st.markdown("<br>", unsafe_allow_html=True)
+
+# Add this at the end of your main() function:
+def add_footer():
+    logo_google = "logo/google.png"
+    logo_bhashini = "logo/bhashini.png"
+    
+    st.markdown(f"""
+        <style>
+        .footer {{
+            width: 100%;
+            background-color: white;
+            text-align: center;
+            padding: 120px 0;
+            margin-top: 100px;
+            border-top: 1px solid #eee;
+        }}
+        .footer-content {{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }}
+        .footer img.google-logo {{
+            height: 240px;
+            width: auto;
+            object-fit: contain;
+        }}
+        .footer img.bhashini-logo {{
+            height: 250px;  /* Increased height for Bhashini logo */
+            width: auto;
+            object-fit: contain;
+            margin-left: -10px;  /* Negative margin to bring logos closer */
+        }}
+        .footer-text {{
+            color: #666;
+            font-size: 14px;
+            margin-bottom: -50px;  /* Decreased bottom margin */
+            margin-top: 0px;    /* Decreased top margin */
+        }}
+        </style>
+        
+        <div class="footer">
+            <div class="footer-text">Supported By</div>
+            <div class="footer-content">
+                <img class="google-logo" src="data:image/png;base64,{base64.b64encode(open(logo_google, 'rb').read()).decode()}" alt="Google Logo">
+                <img class="bhashini-logo" src="data:image/png;base64,{base64.b64encode(open(logo_bhashini, 'rb').read()).decode()}" alt="Bhashini Logo">
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+    
 
 def load_karnataka_geojson() -> Dict[str, Any]:
     url = "https://raw.githubusercontent.com/adarshbiradar/maps-geojson/master/states/karnataka.json"
@@ -166,22 +267,14 @@ def load_karnataka_geojson() -> Dict[str, Any]:
         st.error(f"Error loading Karnataka GeoJSON: {str(e)}")
         return None
 
-def load_data(file_path=None):
-    if file_path is None:
-        st.error("Please provide a valid JSON file path in the sidebar")
-        return None
-    
+def load_data():
     try:
+        # Replace this path with your actual JSON file path
+        file_path = "data/sample.json"
         with open(file_path, 'r', encoding='utf-8') as f:
             return json.load(f)
-    except FileNotFoundError:
-        st.error(f"File not found: {file_path}")
-        return None
-    except json.JSONDecodeError:
-        st.error("Invalid JSON file format")
-        return None
     except Exception as e:
-        st.error(f"Error loading file: {str(e)}")
+        st.error(f"Error loading data: {str(e)}")
         return None
 
 def get_color(wer):
@@ -206,7 +299,8 @@ def find_clicked_district(clicked_lat, clicked_lng, geojson_data, model_data):
     return None
 
 def main():
-    st.title("Model WER Analysis Dashboard")
+    add_logo()
+    st.markdown("<h1 style='color: #203454;'>WER Analysis on Karnataka map</h1>", unsafe_allow_html=True)
     
     # Initialize session state
     if 'clicked_district' not in st.session_state:
@@ -214,34 +308,44 @@ def main():
     if 'last_click' not in st.session_state:
         st.session_state.last_click = None
     
+    # Load data directly
+    data = load_data()
+    if data is None:
+        st.error("Failed to load data")
+        return
+
     # Sidebar setup
-    with st.sidebar:
-        add_logo()        
-        file_path = st.text_input(
-            "Enter JSON file path",
-            value="",
-            help="Enter the full path to your JSON file"
-        )
+    #with st.sidebar:
+        #add_logo()        
+        # file_path = st.text_input(
+        #     "Enter JSON file path",
+        #     value="",
+        #     help="Enter the full path to your JSON file"
+        # )
         
-        uploaded_file = st.file_uploader(
-            "Or upload a JSON file",
-            type=['json'],
-            help="Upload your JSON file directly"
-        )
+        # uploaded_file = st.file_uploader(
+        #     "Or upload a JSON file",
+        #     type=['json'],
+        #     help="Upload your JSON file directly"
+        # )
         
-        data = None
-        if uploaded_file is not None:
-            try:
-                data = json.load(uploaded_file)
-            except Exception as e:
-                st.error(f"Error loading uploaded file: {str(e)}")
-        elif file_path:
-            data = load_data(file_path)
+        # data = None
+        # if uploaded_file is not None:
+        #     try:
+        #         data = json.load(uploaded_file)
+        #     except Exception as e:
+        #         st.error(f"Error loading uploaded file: {str(e)}")
+        # elif file_path:
+        #     data = load_data(file_path)
         
-        if data is None:
-            st.info("Please provide a JSON file to visualize the data")
-            return
+        # if data is None:
+        #     st.info("Please provide a JSON file to visualize the data")
+        #     return
         
+    # Create two columns - one for map and one for thresholds
+    map_col, threshold_col = st.columns([4, 2])  # 4:1 ratio
+
+    with threshold_col:
         selected_model = st.selectbox(
             "Select Model",
             options=list(data.keys())
@@ -267,15 +371,65 @@ def main():
         # Only update if explicitly changed through dropdown
         if st.session_state.get('district_selector') != st.session_state.clicked_district:
             st.session_state.clicked_district = selected_district_sidebar
-    
-    # Load Karnataka GeoJSON
-    karnataka_geojson = load_karnataka_geojson()
-    if karnataka_geojson is None:
-        st.error("Failed to load Karnataka district boundaries")
-        return
+        
+        # Load Karnataka GeoJSON
+        karnataka_geojson = load_karnataka_geojson()
+        if karnataka_geojson is None:
+            st.error("Failed to load Karnataka district boundaries")
+            return
 
-    # Create two columns - one for map and one for thresholds
-    map_col, threshold_col = st.columns([4, 1])  # 4:1 ratio
+        st.markdown("""
+            <div style="
+                padding: 15px;
+                background-color: var(--secondary-background-color);
+                border-radius: 5px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                margin-top: 20px;
+                color: var(--text-color);
+            ">
+                <h4 style="text-align: center; margin-bottom: 15px; color: var(--text-color);">WER Thresholds</h4>
+                <div style="margin: 10px 0;">
+                    <div style="
+                        display: inline-block;
+                        width: 20px;
+                        height: 20px;
+                        background-color: #00ff00;
+                        margin-right: 10px;
+                        vertical-align: middle;
+                        opacity: 0.7;
+                        border: 1px solid var(--text-color);
+                    "></div>
+                    <span style="color: var(--text-color);">WER ≤ 20%</span>
+                </div>
+                <div style="margin: 10px 0;">
+                    <div style="
+                        display: inline-block;
+                        width: 20px;
+                        height: 20px;
+                        background-color: #ffa500;
+                        margin-right: 10px;
+                        vertical-align: middle;
+                        opacity: 0.7;
+                        border: 1px solid var(--text-color);
+                    "></div>
+                    <span style="color: var(--text-color);">20% < WER ≤ 50%</span>
+                </div>
+                <div style="margin: 10px 0;">
+                    <div style="
+                        display: inline-block;
+                        width: 20px;
+                        height: 20px;
+                        background-color: #ff0000;
+                        margin-right: 10px;
+                        vertical-align: middle;
+                        opacity: 0.7;
+                        border: 1px solid var(--text-color);
+                    "></div>
+                    <span style="color: var(--text-color);">WER > 50%</span>
+                </div>
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
     
     with map_col:
         # Define Karnataka bounds
@@ -352,60 +506,6 @@ def main():
         # Display map
         map_data = st_folium(m, width=1000, height=700, key="map")
     
-    with threshold_col:
-
-        st.markdown("""
-            <div style="
-                padding: 15px;
-                background-color: var(--secondary-background-color);
-                border-radius: 5px;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                margin-top: 20px;
-                color: var(--text-color);
-            ">
-                <h4 style="text-align: center; margin-bottom: 15px; color: var(--text-color);">WER Thresholds</h4>
-                <div style="margin: 10px 0;">
-                    <div style="
-                        display: inline-block;
-                        width: 20px;
-                        height: 20px;
-                        background-color: #00ff00;
-                        margin-right: 10px;
-                        vertical-align: middle;
-                        opacity: 0.7;
-                        border: 1px solid var(--text-color);
-                    "></div>
-                    <span style="color: var(--text-color);">WER ≤ 20%</span>
-                </div>
-                <div style="margin: 10px 0;">
-                    <div style="
-                        display: inline-block;
-                        width: 20px;
-                        height: 20px;
-                        background-color: #ffa500;
-                        margin-right: 10px;
-                        vertical-align: middle;
-                        opacity: 0.7;
-                        border: 1px solid var(--text-color);
-                    "></div>
-                    <span style="color: var(--text-color);">20% < WER ≤ 50%</span>
-                </div>
-                <div style="margin: 10px 0;">
-                    <div style="
-                        display: inline-block;
-                        width: 20px;
-                        height: 20px;
-                        background-color: #ff0000;
-                        margin-right: 10px;
-                        vertical-align: middle;
-                        opacity: 0.7;
-                        border: 1px solid var(--text-color);
-                    "></div>
-                    <span style="color: var(--text-color);">WER > 50%</span>
-                </div>
-                </div>
-            </div>
-        """, unsafe_allow_html=True)
     
     # Update clicked district based on map interaction
     if map_data['last_clicked'] and map_data['last_clicked'] != st.session_state.last_click:
@@ -470,12 +570,12 @@ def main():
                     </div>
                 """, unsafe_allow_html=True)
             
-            # Format info
-            st.markdown("""
-                <div style="font-size: 12px; color: var(--text-color); opacity: 0.8; margin-top: 5px;">
-                    Format: WAV | Use player controls or download for offline listening
-                </div>
-            """, unsafe_allow_html=True)
+            # # Format info
+            # st.markdown("""
+            #     <div style="font-size: 12px; color: var(--text-color); opacity: 0.8; margin-top: 5px;">
+            #         Format: WAV | Use player controls or download for offline listening
+            #     </div>
+            # """, unsafe_allow_html=True)
 
             # Model output and reference
             transcription_cols = st.columns(2)
@@ -494,12 +594,17 @@ def main():
                     unsafe_allow_html=True
                 )
             
-            # Add keyboard shortcuts info
-            st.markdown("""
-                <div style="font-size: 12px; color: var(--text-color); margin-top: 10px; opacity: 0.8;">
-                    Keyboard shortcuts: Space - Play/Pause | → - Forward | ← - Backward | ↑ - Volume Up | ↓ - Volume Down
-                </div>
-            """, unsafe_allow_html=True)
+            # # Add keyboard shortcuts info
+            # st.markdown("""
+            #     <div style="font-size: 12px; color: var(--text-color); margin-top: 10px; opacity: 0.8;">
+            #         Keyboard shortcuts: Space - Play/Pause | → - Forward | ← - Backward | ↑ - Volume Up | ↓ - Volume Down
+            #     </div>
+            # """, unsafe_allow_html=True)
+        #add a separator
+        st.markdown("<hr style='margin: 20px 0;'>", unsafe_allow_html=True)
+        
+
+    add_footer()
 
 if __name__ == "__main__":
     main()

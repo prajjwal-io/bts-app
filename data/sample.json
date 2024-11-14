@@ -1,0 +1,77 @@
+{"Model_1":{
+    "Belagavi":{"WER":"50.55",
+                "Samples":{
+                    "Sample_1":{
+                        "URL":"https://storage.googleapis.com/vaani-website-sample-files/IISc_VaaniProject_S_Bihar_Sitamarhi_91297_10712729_APATKUM_156499_6578_19318.wav",
+                        "Model_Output":"ಎಲ್ಲ ಇದೆ ಅಲ್ಲೆಲ್ಲ ಹೋದಾಗ ಇದೆ ತರ ಒಂದ್ ಫೋಟೋತೆಗಿತಾರೆ",
+                        "Reference":"ಕೋಇ ಮೆಟೀರಿಯಲ್ ಗಳು ಇದ್ದವೇ ಹಾಗು ಇದಕ್ಕೆ ಕೇಸರಿ ಹಾಗು ಕರೆ ಬಣ್ಣವನ್ನು-ಬಣ್ಣವನ್ನು"
+                    },
+                    "Sample_2":{
+                        "URL":"https://storage.googleapis.com/vaani-website-sample-files/Rajasthan_Churu_94767_10854634_KTBCA_320305_6_12144.wav",
+                        "Model_Output":"ಜನ್ರು ನಿಂತ್ಕೊಂಡಿದಾರೆ ದೋಣಿಗಳಿದವೆ ಕೆಲವು ಜನ್ರು ದೋಣಿಯಲ್ಲಿ ಓಡಾಡತ್ತಿದರೆ ನೀರ್ ಇದೆ.",
+                        "Reference":"ಇವು ಒಂದು ವಿದ್ಯಾಭ್ಯಾಸ ಕೊಡುವ ಕಾಯಕ--"
+                    },
+                    "Sample_3":{
+                        "URL":"https://storage.googleapis.com/vaani-website-sample-files/Rajasthan_Churu_90019_10673874_RJCHPC_85108_0_9855.wav",
+                        "Model_Output":"ರೆಪೇರಿಯನ್ನು ಮಾಡಿ ಕೊಡುತ್ತಾರೆ ಮತ್ತು ಉತ್ತಮವಾದ ಸೇವೆಯನ್ನು ಒದಗಿಸಿಕೊಡುತ್ತರೆ.",
+                        "Reference":"ಪೂಜೆ ಮಾಡೋಣ ಅಂದ್ರೆ ಉದ್ಬತ್ತಿಗಳು ಎಲ್ಲಾರ ಸಿಗತ್ತೆ ಮೊದ್ಲು ಉದ್ಬತ್ತಿ ಕಡ್ಡಿ ಎಲ್ಲಾ ಮಾಡ್ತಿದ್ರು."
+                    }
+                }
+
+            },
+    "Udupi":{"WER":"60.55",
+            "Samples":{
+                "Sample_1":{
+                    "URL":"https://storage.googleapis.com/vaani-website-sample-files/Rajasthan_Churu_99551_11035685_BHJHBC_137597_11048_19955.wav",
+                    "Model_Output":"ಬಜಾರು ನಾವು ಇಲ್ ಮೊದಲೆಲ್ಲ ಅಂಗಡಿ ಇಲ್ಲೆಲ್ಲ ಹೋದ್ರೆ ಒಂದ್ ಘಂಟ್ ಘಂಟ್ಟಲೆ ಕಾಯ್ಬೇಕಿತ್ತು.",
+                    "Reference":"ಆಮೇಲೆ ಅದರಲ್ಲೇ ಕೂರ್ಸಿದ್ರೆ ಆಮೇಲೆ ಆಟ ಆಡಿ ಖುಷಿ ಪಟ್ರು ಚೆನ್ನಾಗಿಯಿತ್ತು."
+                },
+                "Sample_2":{
+                    "URL":"https://storage.googleapis.com/vaani-website-sample-files/Rajasthan_Churu_101140_11076005_RJCHCO_194808_8401_15006.wav",
+                    "Model_Output":"ಮತ್ತೆ ಮೈದಾನ ಇದೆ ಮೈದಾನದಲ್ಲಿ ಪ್ರಶಾಂತವಾಗಿದೆ ಮಕ್ಕಳು ಆಟ ಆಡಬಹುದು.",
+                    "Reference":"ಚಿತ್ರದ ಬಗ್ಗೇ ನಂಗಂತೂ ಮೋಡ ಸಕತ್ತಾಗಿ ಕಾಣಸ್ತಾಯಿದೆ ನಂಗಂತೂ ಸಿಕ್ಕಾಪಟ್ಟೆ ಇಷ್ಟ ಆಯಿತ್ತು ಮೋಡ."
+                }
+            }
+
+        }
+    },
+
+"Model_2":{
+    "Belagavi":{"WER":"40.55",
+                "Samples":{
+                    "Sample_1":{
+                        "URL":"https://storage.googleapis.com/vaani-website-sample-files/IISc_VaaniProject_S_Bihar_Sitamarhi_91297_10712729_APATKUM_156499_6578_19318.wav",
+                        "Model_Output":"ಎಲ್ಲ ಇದೆ ಅಲ್ಲೆಲ್ಲ ಹೋದಾಗ ಇದೆ ತರ ಒಂದ್ ಫೋಟೋತೆಗಿತಾರೆ",
+                        "Reference":"ಕೋಇ ಮೆಟೀರಿಯಲ್ ಗಳು ಇದ್ದವೇ ಹಾಗು ಇದಕ್ಕೆ ಕೇಸರಿ ಹಾಗು ಕರೆ ಬಣ್ಣವನ್ನು-ಬಣ್ಣವನ್ನು"
+                    },
+                    "Sample_2":{
+                        "URL":"https://storage.googleapis.com/vaani-website-sample-files/Rajasthan_Churu_94767_10854634_KTBCA_320305_6_12144.wav",
+                        "Model_Output":"ಜನ್ರು ನಿಂತ್ಕೊಂಡಿದಾರೆ ದೋಣಿಗಳಿದವೆ ಕೆಲವು ಜನ್ರು ದೋಣಿಯಲ್ಲಿ ಓಡಾಡತ್ತಿದರೆ ನೀರ್ ಇದೆ.",
+                        "Reference":"ಇವು ಒಂದು ವಿದ್ಯಾಭ್ಯಾಸ ಕೊಡುವ ಕಾಯಕ--"
+                    },
+                    "Sample_3":{
+                        "URL":"https://storage.googleapis.com/vaani-website-sample-files/Rajasthan_Churu_90019_10673874_RJCHPC_85108_0_9855.wav",
+                        "Model_Output":"ರೆಪೇರಿಯನ್ನು ಮಾಡಿ ಕೊಡುತ್ತಾರೆ ಮತ್ತು ಉತ್ತಮವಾದ ಸೇವೆಯನ್ನು ಒದಗಿಸಿಕೊಡುತ್ತರೆ.",
+                        "Reference":"ಪೂಜೆ ಮಾಡೋಣ ಅಂದ್ರೆ ಉದ್ಬತ್ತಿಗಳು ಎಲ್ಲಾರ ಸಿಗತ್ತೆ ಮೊದ್ಲು ಉದ್ಬತ್ತಿ ಕಡ್ಡಿ ಎಲ್ಲಾ ಮಾಡ್ತಿದ್ರು."
+                    }
+                }
+
+            },
+    "Udupi":{"WER":"30.55",
+            "Samples":{
+                "Sample_1":{
+                    "URL":"https://storage.googleapis.com/vaani-website-sample-files/Rajasthan_Churu_99551_11035685_BHJHBC_137597_11048_19955.wav",
+                    "Model_Output":"ಬಜಾರು ನಾವು ಇಲ್ ಮೊದಲೆಲ್ಲ ಅಂಗಡಿ ಇಲ್ಲೆಲ್ಲ ಹೋದ್ರೆ ಒಂದ್ ಘಂಟ್ ಘಂಟ್ಟಲೆ ಕಾಯ್ಬೇಕಿತ್ತು.",
+                    "Reference":"ಆಮೇಲೆ ಅದರಲ್ಲೇ ಕೂರ್ಸಿದ್ರೆ ಆಮೇಲೆ ಆಟ ಆಡಿ ಖುಷಿ ಪಟ್ರು ಚೆನ್ನಾಗಿಯಿತ್ತು."
+                },
+                "Sample_2":{
+                    "URL":"https://storage.googleapis.com/vaani-website-sample-files/Rajasthan_Churu_101140_11076005_RJCHCO_194808_8401_15006.wav",
+                    "Model_Output":"ಮತ್ತೆ ಮೈದಾನ ಇದೆ ಮೈದಾನದಲ್ಲಿ ಪ್ರಶಾಂತವಾಗಿದೆ ಮಕ್ಕಳು ಆಟ ಆಡಬಹುದು.",
+                    "Reference":"ಚಿತ್ರದ ಬಗ್ಗೇ ನಂಗಂತೂ ಮೋಡ ಸಕತ್ತಾಗಿ ಕಾಣಸ್ತಾಯಿದೆ ನಂಗಂತೂ ಸಿಕ್ಕಾಪಟ್ಟೆ ಇಷ್ಟ ಆಯಿತ್ತು ಮೋಡ."
+                }
+            }
+
+        }
+    }
+
+}
