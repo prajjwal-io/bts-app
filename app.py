@@ -226,6 +226,8 @@ def add_logo():
 def add_footer():
     logo_google = LOGO_DIR / "google.png"
     logo_bhashini = LOGO_DIR / "bhashini.png"
+    logo_bmgf = LOGO_DIR / "bmgf.png"
+    logo_giz = LOGO_DIR / "giz-logo.gif"
     st.markdown(f"""
         <style>
         .footer {{
@@ -244,16 +246,23 @@ def add_footer():
             margin: 0 auto;
         }}
         .footer img.google-logo {{
-            height: 240px;
+            height: 300px;
             width: auto;
             object-fit: contain;
         }}
         .footer img.bhashini-logo {{
-            height: 250px;  /* Increased height for Bhashini logo */
+            height: 350px;  /* Increased height for Bhashini logo */
             width: auto;
             object-fit: contain;
             margin-left: -10px;  /* Negative margin to bring logos closer */
         }}
+        .footer img {{
+            height: 80px;
+            width: auto;
+            object-fit: contain;
+            margin: 0 20px;
+        }}
+        
         .footer-text {{
             color: #666;
             font-size: 14px;
@@ -267,6 +276,8 @@ def add_footer():
             <div class="footer-content">
                 <img class="google-logo" src="data:image/png;base64,{base64.b64encode(open(logo_google, 'rb').read()).decode()}" alt="Google Logo">
                 <img class="bhashini-logo" src="data:image/png;base64,{base64.b64encode(open(logo_bhashini, 'rb').read()).decode()}" alt="Bhashini Logo">
+                <img src="data:image/png;base64,{base64.b64encode(open(logo_bmgf, 'rb').read()).decode()}" alt="BMGF Logo">
+                <img src="data:image/png;base64,{base64.b64encode(open(logo_giz, 'rb').read()).decode()}" alt="GIZ Logo">
             </div>
         </div>
     """, unsafe_allow_html=True)
@@ -317,60 +328,29 @@ def main():
     add_logo()
     st.markdown("<h1 style='color: #203454;'>WER Analysis on Karnataka map</h1>", unsafe_allow_html=True)
     
-    # Initialize session state
     if 'clicked_district' not in st.session_state:
         st.session_state.clicked_district = None
     if 'last_click' not in st.session_state:
         st.session_state.last_click = None
     
-    # Load data directly
     data = load_data()
     if data is None:
         st.error("Failed to load data")
         return
 
-    # Sidebar setup
-    #with st.sidebar:
-        #add_logo()        
-        # file_path = st.text_input(
-        #     "Enter JSON file path",
-        #     value="",
-        #     help="Enter the full path to your JSON file"
-        # )
-        
-        # uploaded_file = st.file_uploader(
-        #     "Or upload a JSON file",
-        #     type=['json'],
-        #     help="Upload your JSON file directly"
-        # )
-        
-        # data = None
-        # if uploaded_file is not None:
-        #     try:
-        #         data = json.load(uploaded_file)
-        #     except Exception as e:
-        #         st.error(f"Error loading uploaded file: {str(e)}")
-        # elif file_path:
-        #     data = load_data(file_path)
-        
-        # if data is None:
-        #     st.info("Please provide a JSON file to visualize the data")
-        #     return
-        
-    # Create two columns - one for map and one for thresholds
-    map_col, threshold_col = st.columns([4, 2])  # 4:1 ratio
+    # Create two columns for map and analysis
+    map_col, analysis_col = st.columns([4, 2])
 
-    with threshold_col:
+    with analysis_col:
         selected_model = st.selectbox(
             "Select Model",
             options=list(data.keys())
         )
         
         st.subheader("Data Summary")
-        st.write(f"Number of models: {len(data)}")
-        st.write(f"Districts in selected model: {len(data[selected_model])}")
+        st.write(f"Models: {len(data)}")
+        st.write(f"Districts: {len(data[selected_model])}")
         
-        # Add district dropdown without disrupting click behavior
         if st.session_state.clicked_district:
             default_ix = list(data[selected_model].keys()).index(st.session_state.clicked_district)
         else:
@@ -383,89 +363,61 @@ def main():
             key='district_selector'
         )
         
-        # Only update if explicitly changed through dropdown
         if st.session_state.get('district_selector') != st.session_state.clicked_district:
             st.session_state.clicked_district = selected_district_sidebar
+            
+        # Display district analysis if selected
+        if st.session_state.clicked_district and st.session_state.clicked_district in data[selected_model]:
+            district_data = data[selected_model][st.session_state.clicked_district]
+            
+            st.markdown(
+                f"""
+                <div class="metric-container" style="text-align: center;">
+                    <h4>{st.session_state.clicked_district} Word Error Rate (WER)</h4>
+                    <h2 style="color: {get_color(district_data['WER'])}">{district_data['WER']}%</h2>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
         
-        # Load Karnataka GeoJSON
+        # WER Thresholds legend
+        st.markdown("""
+            <div style="padding: 5px; background-color: var(--secondary-background-color); border-radius: 10px; margin-top: 10px;">
+                <h5 style="margin-bottom: 10px;">WER Thresholds</h5>
+                <div style="margin: 10px 0;">
+                    <div style="display: inline-block; width: 20px; height: 20px; background-color: #00ff00; margin-right: 10px; vertical-align: middle; opacity: 0.7; border: 1px solid var(--text-color);"></div>
+                    <span style="color: var(--text-color);">WER ≤ 20%</span>
+                </div>
+                <div style="margin: 10px 0;">
+                    <div style="display: inline-block; width: 20px; height: 20px; background-color: #ffa500; margin-right: 10px; vertical-align: middle; opacity: 0.7; border: 1px solid var(--text-color);"></div>
+                    <span style="color: var(--text-color);">20% < WER ≤ 50%</span>
+                </div>
+                <div style="margin: 10px 0;">
+                    <div style="display: inline-block; width: 20px; height: 20px; background-color: #ff0000; margin-right: 10px; vertical-align: middle; opacity: 0.7; border: 1px solid var(--text-color);"></div>
+                    <span style="color: var(--text-color);">WER > 50%</span>
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
+
+    with map_col:
         karnataka_geojson = load_karnataka_geojson()
         if karnataka_geojson is None:
             st.error("Failed to load Karnataka district boundaries")
             return
 
-        st.markdown("""
-            <div style="
-                padding: 15px;
-                background-color: var(--secondary-background-color);
-                border-radius: 5px;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                margin-top: 20px;
-                color: var(--text-color);
-            ">
-                <h4 style="text-align: center; margin-bottom: 15px; color: var(--text-color);">WER Thresholds</h4>
-                <div style="margin: 10px 0;">
-                    <div style="
-                        display: inline-block;
-                        width: 20px;
-                        height: 20px;
-                        background-color: #00ff00;
-                        margin-right: 10px;
-                        vertical-align: middle;
-                        opacity: 0.7;
-                        border: 1px solid var(--text-color);
-                    "></div>
-                    <span style="color: var(--text-color);">WER ≤ 20%</span>
-                </div>
-                <div style="margin: 10px 0;">
-                    <div style="
-                        display: inline-block;
-                        width: 20px;
-                        height: 20px;
-                        background-color: #ffa500;
-                        margin-right: 10px;
-                        vertical-align: middle;
-                        opacity: 0.7;
-                        border: 1px solid var(--text-color);
-                    "></div>
-                    <span style="color: var(--text-color);">20% < WER ≤ 50%</span>
-                </div>
-                <div style="margin: 10px 0;">
-                    <div style="
-                        display: inline-block;
-                        width: 20px;
-                        height: 20px;
-                        background-color: #ff0000;
-                        margin-right: 10px;
-                        vertical-align: middle;
-                        opacity: 0.7;
-                        border: 1px solid var(--text-color);
-                    "></div>
-                    <span style="color: var(--text-color);">WER > 50%</span>
-                </div>
-                </div>
-            </div>
-        """, unsafe_allow_html=True)
-    
-    with map_col:
-        # Define Karnataka bounds
-        KARNATAKA_BOUNDS = [
-            [11.5, 74.0],  # Southwest corner
-            [18.5, 78.5]   # Northeast corner
-        ]
-        # Create map
+        KARNATAKA_BOUNDS = [[11.5, 74.0], [18.5, 78.5]]
         m = folium.Map(
-            location=[15.3173, 75.7139],  # Center of Karnataka
+            location=[15.3173, 75.7139],
             zoom_start=7,
             tiles='OpenStreetMap',
-            min_zoom=7,  # Restrict minimum zoom
-            max_zoom=10,  # Restrict maximum zoom
-            min_lat=KARNATAKA_BOUNDS[0][0],  # Restrict panning
+            min_zoom=7,
+            max_zoom=10,
+            min_lat=KARNATAKA_BOUNDS[0][0],
             max_lat=KARNATAKA_BOUNDS[1][0],
             min_lon=KARNATAKA_BOUNDS[0][1],
             max_lon=KARNATAKA_BOUNDS[1][1],
         )
-        
-        #Style function for districts
+
         def style_function(feature):
             district_name = feature['properties']['district']
             if district_name in data[selected_model]:
@@ -483,11 +435,9 @@ def main():
             }
         
         mask = folium.FeatureGroup(name='mask')
-
-            # Add white mask around Karnataka
         mask_coordinates = [
-            [[90, 0], [90, 90], [0, 90], [0, 0]],  # World bounds
-            karnataka_geojson['features'][0]['geometry']['coordinates'][0]  # Karnataka boundary
+            [[90, 0], [90, 90], [0, 90], [0, 0]],
+            karnataka_geojson['features'][0]['geometry']['coordinates'][0]
         ]
         
         folium.Polygon(
@@ -498,11 +448,8 @@ def main():
             fill_opacity=0.8,
         ).add_to(mask)
         
-        # Add the mask to the map
         mask.add_to(m)
 
-
-        # Add districts layer
         districts = folium.GeoJson(
             karnataka_geojson,
             style_function=style_function,
@@ -514,15 +461,10 @@ def main():
             )
         ).add_to(m)
 
-        # Fit the map to Karnataka bounds
         m.fit_bounds(KARNATAKA_BOUNDS)
+        map_data = st_folium(m, width=1200, height=700, key="map")
 
-        
-        # Display map
-        map_data = st_folium(m, width=1000, height=700, key="map")
-    
-    
-    # Update clicked district based on map interaction
+    # Update clicked district
     if map_data['last_clicked'] and map_data['last_clicked'] != st.session_state.last_click:
         clicked_lat = map_data['last_clicked']['lat']
         clicked_lng = map_data['last_clicked']['lng']
@@ -536,96 +478,65 @@ def main():
             st.session_state.clicked_district = clicked_district
             st.session_state.last_click = map_data['last_clicked']
             st.experimental_rerun()
-    
-    # Display analysis for selected district
+
+    # Sample Analysis section
+    st.markdown("### Sample Analysis")
     if st.session_state.clicked_district and st.session_state.clicked_district in data[selected_model]:
         district_data = data[selected_model][st.session_state.clicked_district]
+        left_col, right_col = st.columns(2)
         
-        col1, col2, col3 = st.columns([1, 2, 1])
-        with col2:
-            st.markdown(
-                f"""
-                <div class="metric-container" style="text-align: center;">
-                    <h3>{st.session_state.clicked_district} District Analysis</h3>
-                    <h4>Word Error Rate (WER)</h4>
-                    <h2 style="color: {get_color(district_data['WER'])}">{district_data['WER']}%</h2>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+        samples = list(district_data['Samples'].items())
+        mid_point = (len(samples) + 1) // 2
         
-    # Display samples in two columns
-    st.markdown("### Sample Analysis")
-    left_col, right_col = st.columns(2)
-    
-    # Split samples into two groups
-    samples = list(district_data['Samples'].items())
-    mid_point = (len(samples) + 1) // 2
-    
-    # Left column samples
-    with left_col:
-        for sample_id, sample_data in samples[:mid_point]:
-            with st.expander(f"Sample {sample_id}", expanded=True):
-                # Audio player row
-                audio_col, download_col = st.columns([3, 1])
-                with audio_col:
-                    st.audio(sample_data['URL'], format='audio/wav')
-                with download_col:
-                    st.markdown(f"""
-                        <div style="height: 40px; display: flex; align-items: center; justify-content: center;">
-                            <a href="{sample_data['URL']}" 
-                               style="text-decoration: none; padding: 8px 15px; background-color: var(--primary-color); 
-                                      color: white; border-radius: 5px; display: inline-flex; align-items: center; gap: 5px;"
-                               download="sample_{sample_id}.wav" target="_blank">
-                                <span>📥</span> Download
-                            </a>
-                        </div>
-                    """, unsafe_allow_html=True)
-                
-                # Transcriptions
-                st.markdown("**Model Output:**")
-                st.markdown(f"""<div class="sample-box">{sample_data['ModelOutput']}</div>""", unsafe_allow_html=True)
-                st.markdown("**Reference:**")
-                st.markdown(f"""<div class="sample-box">{sample_data['Reference']}</div>""", unsafe_allow_html=True)
-    
-    # Right column samples
-    with right_col:
-        for sample_id, sample_data in samples[mid_point:]:
-            with st.expander(f"Sample {sample_id}", expanded=True):
-                # Audio player row
-                audio_col, download_col = st.columns([3, 1])
-                with audio_col:
-                    st.audio(sample_data['URL'], format='audio/wav')
-                with download_col:
-                    st.markdown(f"""
-                        <div style="height: 40px; display: flex; align-items: center; justify-content: center;">
-                            <a href="{sample_data['URL']}" 
-                               style="text-decoration: none; padding: 8px 15px; background-color: var(--primary-color); 
-                                      color: white; border-radius: 5px; display: inline-flex; align-items: center; gap: 5px;"
-                               download="sample_{sample_id}.wav" target="_blank">
-                                <span>📥</span> Download
-                            </a>
-                        </div>
-                    """, unsafe_allow_html=True)
-                
-                # Transcriptions
-                st.markdown("**Model Output:**")
-                st.markdown(f"""<div class="sample-box">{sample_data['ModelOutput']}</div>""", unsafe_allow_html=True)
-                st.markdown("**Reference:**")
-                st.markdown(f"""<div class="sample-box">{sample_data['Reference']}</div>""", unsafe_allow_html=True)
+        # Left column samples
+        with left_col:
+            for sample_id, sample_data in samples[:mid_point]:
+                with st.expander(f"Sample {sample_id}", expanded=True):
+                    audio_col, download_col = st.columns([3, 1])
+                    with audio_col:
+                        st.audio(sample_data['URL'], format='audio/wav')
+                    with download_col:
+                        st.markdown(f"""
+                            <div style="height: 40px; display: flex; align-items: center; justify-content: center;">
+                                <a href="{sample_data['URL']}" 
+                                   style="text-decoration: none; padding: 8px 15px; background-color: var(--primary-color); 
+                                          color: white; border-radius: 5px; display: inline-flex; align-items: center; gap: 5px;"
+                                   download="sample_{sample_id}.wav" target="_blank">
+                                    <span>📥</span> Download
+                                </a>
+                            </div>
+                        """, unsafe_allow_html=True)
+                    
+                    st.markdown("**Model Output:**")
+                    st.markdown(f"""<div class="sample-box">{sample_data['ModelOutput']}</div>""", unsafe_allow_html=True)
+                    st.markdown("**Reference:**")
+                    st.markdown(f"""<div class="sample-box">{sample_data['Reference']}</div>""", unsafe_allow_html=True)
+        
+        # Right column samples
+        with right_col:
+            for sample_id, sample_data in samples[mid_point:]:
+                with st.expander(f"Sample {sample_id}", expanded=True):
+                    audio_col, download_col = st.columns([3, 1])
+                    with audio_col:
+                        st.audio(sample_data['URL'], format='audio/wav')
+                    with download_col:
+                        st.markdown(f"""
+                            <div style="height: 40px; display: flex; align-items: center; justify-content: center;">
+                                <a href="{sample_data['URL']}" 
+                                   style="text-decoration: none; padding: 8px 15px; background-color: var(--primary-color); 
+                                          color: white; border-radius: 5px; display: inline-flex; align-items: center; gap: 5px;"
+                                   download="sample_{sample_id}.wav" target="_blank">
+                                    <span>📥</span> Download
+                                </a>
+                            </div>
+                        """, unsafe_allow_html=True)
+                    
+                    st.markdown("**Model Output:**")
+                    st.markdown(f"""<div class="sample-box">{sample_data['ModelOutput']}</div>""", unsafe_allow_html=True)
+                    st.markdown("**Reference:**")
+                    st.markdown(f"""<div class="sample-box">{sample_data['Reference']}</div>""", unsafe_allow_html=True)
 
     st.markdown("<hr style='margin: 20px 0;'>", unsafe_allow_html=True)
-            
-            # # Add keyboard shortcuts info
-            # st.markdown("""
-            #     <div style="font-size: 12px; color: var(--text-color); margin-top: 10px; opacity: 0.8;">
-            #         Keyboard shortcuts: Space - Play/Pause | → - Forward | ← - Backward | ↑ - Volume Up | ↓ - Volume Down
-            #     </div>
-            # """, unsafe_allow_html=True)
-        #add a separator
-    st.markdown("<hr style='margin: 20px 0;'>", unsafe_allow_html=True)
-
-
     add_footer()
 
 if __name__ == "__main__":
