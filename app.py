@@ -285,7 +285,7 @@ def load_karnataka_geojson() -> Dict[str, Any]:
 def load_data():
     try:
         # Replace this path with your actual JSON file path
-        file_path = DATA_DIR / "sample.json"
+        file_path = DATA_DIR / "sample2.json"
         with open(file_path, 'r', encoding='utf-8') as f:
             return json.load(f)
     except Exception as e:
@@ -554,60 +554,67 @@ def main():
                 unsafe_allow_html=True
             )
         
-        # Display samples
-        # Display samples
+    # Display samples in two columns
     st.markdown("### Sample Analysis")
-    for sample_id, sample_data in district_data['Samples'].items():
-        with st.expander(f"Sample {sample_id}", expanded=True):
-            # Add audio player using st.audio
-            st.subheader(f"Audio Sample {sample_id}")
-            
-            # Audio player with download button in a row
-            col1, col2 = st.columns([3, 1])
-            with col1:
-                st.audio(sample_data['URL'], format='audio/wav')
-            with col2:
-                st.markdown(f"""
-                    <div style="height: 40px; display: flex; align-items: center; justify-content: center;">
-                        <a href="{sample_data['URL']}" 
-                        style="text-decoration: none; 
-                                padding: 8px 15px; 
-                                background-color: var(--primary-color); 
-                                color: white; 
-                                border-radius: 5px;
-                                display: inline-flex;
-                                align-items: center;
-                                gap: 5px;"
-                        download="sample_{sample_id}.wav" 
-                        target="_blank">
-                            <span>📥</span> Download
-                        </a>
-                    </div>
-                """, unsafe_allow_html=True)
-            
-            # # Format info
-            # st.markdown("""
-            #     <div style="font-size: 12px; color: var(--text-color); opacity: 0.8; margin-top: 5px;">
-            #         Format: WAV | Use player controls or download for offline listening
-            #     </div>
-            # """, unsafe_allow_html=True)
-
-            # Model output and reference
-            transcription_cols = st.columns(2)
-            
-            with transcription_cols[0]:
+    left_col, right_col = st.columns(2)
+    
+    # Split samples into two groups
+    samples = list(district_data['Samples'].items())
+    mid_point = (len(samples) + 1) // 2
+    
+    # Left column samples
+    with left_col:
+        for sample_id, sample_data in samples[:mid_point]:
+            with st.expander(f"Sample {sample_id}", expanded=True):
+                # Audio player row
+                audio_col, download_col = st.columns([3, 1])
+                with audio_col:
+                    st.audio(sample_data['URL'], format='audio/wav')
+                with download_col:
+                    st.markdown(f"""
+                        <div style="height: 40px; display: flex; align-items: center; justify-content: center;">
+                            <a href="{sample_data['URL']}" 
+                               style="text-decoration: none; padding: 8px 15px; background-color: var(--primary-color); 
+                                      color: white; border-radius: 5px; display: inline-flex; align-items: center; gap: 5px;"
+                               download="sample_{sample_id}.wav" target="_blank">
+                                <span>📥</span> Download
+                            </a>
+                        </div>
+                    """, unsafe_allow_html=True)
+                
+                # Transcriptions
                 st.markdown("**Model Output:**")
-                st.markdown(
-                    f"""<div class="sample-box">{sample_data['Model_Output']}</div>""",
-                    unsafe_allow_html=True
-                )
-            
-            with transcription_cols[1]:
+                st.markdown(f"""<div class="sample-box">{sample_data['ModelOutput']}</div>""", unsafe_allow_html=True)
                 st.markdown("**Reference:**")
-                st.markdown(
-                    f"""<div class="sample-box">{sample_data['Reference']}</div>""",
-                    unsafe_allow_html=True
-                )
+                st.markdown(f"""<div class="sample-box">{sample_data['Reference']}</div>""", unsafe_allow_html=True)
+    
+    # Right column samples
+    with right_col:
+        for sample_id, sample_data in samples[mid_point:]:
+            with st.expander(f"Sample {sample_id}", expanded=True):
+                # Audio player row
+                audio_col, download_col = st.columns([3, 1])
+                with audio_col:
+                    st.audio(sample_data['URL'], format='audio/wav')
+                with download_col:
+                    st.markdown(f"""
+                        <div style="height: 40px; display: flex; align-items: center; justify-content: center;">
+                            <a href="{sample_data['URL']}" 
+                               style="text-decoration: none; padding: 8px 15px; background-color: var(--primary-color); 
+                                      color: white; border-radius: 5px; display: inline-flex; align-items: center; gap: 5px;"
+                               download="sample_{sample_id}.wav" target="_blank">
+                                <span>📥</span> Download
+                            </a>
+                        </div>
+                    """, unsafe_allow_html=True)
+                
+                # Transcriptions
+                st.markdown("**Model Output:**")
+                st.markdown(f"""<div class="sample-box">{sample_data['ModelOutput']}</div>""", unsafe_allow_html=True)
+                st.markdown("**Reference:**")
+                st.markdown(f"""<div class="sample-box">{sample_data['Reference']}</div>""", unsafe_allow_html=True)
+
+    st.markdown("<hr style='margin: 20px 0;'>", unsafe_allow_html=True)
             
             # # Add keyboard shortcuts info
             # st.markdown("""
@@ -616,7 +623,7 @@ def main():
             #     </div>
             # """, unsafe_allow_html=True)
         #add a separator
-        st.markdown("<hr style='margin: 20px 0;'>", unsafe_allow_html=True)
+    st.markdown("<hr style='margin: 20px 0;'>", unsafe_allow_html=True)
 
 
     add_footer()
