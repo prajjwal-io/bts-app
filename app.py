@@ -462,7 +462,7 @@ def main():
         ).add_to(m)
 
         m.fit_bounds(KARNATAKA_BOUNDS)
-        map_data = st_folium(m, width=1200, height=700, key="map")
+        map_data = st_folium(m, width=1100, height=700, key="map")
 
     # Update clicked district
     if map_data['last_clicked'] and map_data['last_clicked'] != st.session_state.last_click:
