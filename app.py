@@ -7,6 +7,13 @@ import requests
 from typing import Dict, Any
 from shapely.geometry import Point, shape
 import base64
+from pathlib import Path
+
+# Get absolute path to this file's directory
+CURRENT_DIR = Path(__file__).parent
+LOGO_DIR = CURRENT_DIR / "logo"
+DATA_DIR = CURRENT_DIR / "data"
+
 
 # Set page configuration
 st.set_page_config(
@@ -153,9 +160,9 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 def add_logo():
-    # Load all logos using base64 encoding
-    logo_artpark = "logo/ARTPARK.png"
-    logo_iisc = "logo/IISC.png"
+    # Load all logos using absolute paths
+    logo_artpark = LOGO_DIR / "ARTPARK.png"
+    logo_iisc = LOGO_DIR / "IISC.png"
     
     st.markdown(f"""
         <style>
@@ -206,11 +213,9 @@ def add_logo():
     # Add spacing after navbar
     st.markdown("<br>", unsafe_allow_html=True)
 
-# Add this at the end of your main() function:
 def add_footer():
-    logo_google = "logo/google.png"
-    logo_bhashini = "logo/bhashini.png"
-    
+    logo_google = LOGO_DIR / "google.png"
+    logo_bhashini = LOGO_DIR / "bhashini.png"
     st.markdown(f"""
         <style>
         .footer {{
@@ -270,7 +275,7 @@ def load_karnataka_geojson() -> Dict[str, Any]:
 def load_data():
     try:
         # Replace this path with your actual JSON file path
-        file_path = "data/sample.json"
+        file_path = DATA_DIR / "sample.json"
         with open(file_path, 'r', encoding='utf-8') as f:
             return json.load(f)
     except Exception as e:
@@ -602,7 +607,7 @@ def main():
             # """, unsafe_allow_html=True)
         #add a separator
         st.markdown("<hr style='margin: 20px 0;'>", unsafe_allow_html=True)
-        
+
 
     add_footer()
 
