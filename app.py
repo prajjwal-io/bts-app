@@ -159,6 +159,16 @@ st.markdown("""
     </script>
 """, unsafe_allow_html=True)
 
+# Helper functions
+def get_base64_encoded_image(image_path):
+    try:
+        with open(image_path, "rb") as img_file:
+            return base64.b64encode(img_file.read()).decode()
+    except Exception as e:
+        st.error(f"Error loading image {image_path}: {str(e)}")
+        return ""
+    
+
 def add_logo():
     # Load all logos using absolute paths
     logo_artpark = LOGO_DIR / "ARTPARK.png"
@@ -194,8 +204,8 @@ def add_logo():
         <div class="navbar">
             <div class="title">VAANI</div>
             <div class="spacer"></div>
-            <img src="data:image/png;base64,{base64.b64encode(open(logo_iisc, 'rb').read()).decode()}" alt="IISC Logo">
-            <img src="data:image/png;base64,{base64.b64encode(open(logo_artpark, 'rb').read()).decode()}" alt="ARTPARK Logo">
+            <img src="data:image/png;base64,{get_base64_encoded_image(logo_iisc)}" alt="IISC Logo">
+            <img src="data:image/png;base64,{get_base64_encoded_image(logo_artpark)}" alt="ARTPARK Logo">
         </div>
     """, unsafe_allow_html=True)
 
