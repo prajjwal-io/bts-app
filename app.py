@@ -255,7 +255,7 @@ def add_footer():
             margin: 0 auto;
         }}
         .footer img.google-logo {{
-            height: 300px;
+            height: 100px;
             width: auto;
             object-fit: contain;
         }}
@@ -283,8 +283,8 @@ def add_footer():
         <div class="footer">
             <div class="footer-text">Supported By</div>
             <div class="footer-content">
-                <img class="google-logo" src="data:image/png;base64,{base64.b64encode(open(logo_google, 'rb').read()).decode()}" alt="Google Logo">
-                <img class="bhashini-logo" src="data:image/png;base64,{base64.b64encode(open(logo_bhashini, 'rb').read()).decode()}" alt="Bhashini Logo">
+                <img class="google-logo" src="data:image/png;base64,{base64.b64encode(open(logo_bhashini, 'rb').read()).decode()}" alt="Bhashini Logo">
+                <img class="bhashini-logo" src="data:image/png;base64,{base64.b64encode(open(logo_google, 'rb').read()).decode()}" alt="Google Logo">
                 <img src="data:image/png;base64,{base64.b64encode(open(logo_bmgf, 'rb').read()).decode()}" alt="BMGF Logo">
                 <img src="data:image/png;base64,{base64.b64encode(open(logo_giz, 'rb').read()).decode()}" alt="GIZ Logo">
             </div>
