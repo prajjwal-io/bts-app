@@ -186,26 +186,35 @@ def add_logo():
             margin-bottom: 20px;
         }}
         .navbar .title {{
-            font-size: 36px;
+            font-size: 50px;
             font-weight: bold;
             color: #00B4FF;
             font-family: Arial, sans-serif;
+            text-decoration: none;
+        }}
+        .navbar .title:hover {{
+            color: #0056b3;
+            text-decoration: none;
         }}
         .navbar .spacer {{
             flex-grow: 1;
         }}
         .navbar img {{
-            max-height: 60px;
+            max-height: 90px;
             width: auto;
         }}
         </style>
         
         <!-- Navbar -->
         <div class="navbar">
-            <div class="title">VAANI</div>
+            <a href="https://vaani.iisc.ac.in/" target="_blank" class="title">
+                VAANI
+            </a>
             <div class="spacer"></div>
             <img src="data:image/png;base64,{get_base64_encoded_image(logo_iisc)}" alt="IISC Logo">
-            <img src="data:image/png;base64,{get_base64_encoded_image(logo_artpark)}" alt="ARTPARK Logo">
+            <a href="https://artpark.in/language-data-ai" target="_blank">
+                <img src="data:image/png;base64,{get_base64_encoded_image(logo_artpark)}" alt="ARTPARK Logo">
+            </a>
         </div>
     """, unsafe_allow_html=True)
 
@@ -462,7 +471,7 @@ def main():
         ).add_to(m)
 
         m.fit_bounds(KARNATAKA_BOUNDS)
-        map_data = st_folium(m, width=1100, height=700, key="map")
+        map_data = st_folium(m, width=1120, height=700, key="map")
 
     # Update clicked district
     if map_data['last_clicked'] and map_data['last_clicked'] != st.session_state.last_click:
