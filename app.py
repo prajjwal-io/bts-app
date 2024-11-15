@@ -500,7 +500,7 @@ def main():
         # Left column samples
         with left_col:
             for sample_id, sample_data in samples[:mid_point]:
-                with st.expander(f"Sample {sample_id}", expanded=True):
+                with st.expander(f"{sample_id}", expanded=True):
                     audio_col, download_col = st.columns([3, 1])
                     with audio_col:
                         st.audio(sample_data['URL'], format='audio/wav')
@@ -524,7 +524,7 @@ def main():
         # Right column samples
         with right_col:
             for sample_id, sample_data in samples[mid_point:]:
-                with st.expander(f"Sample {sample_id}", expanded=True):
+                with st.expander(f"{sample_id}", expanded=True):
                     audio_col, download_col = st.columns([3, 1])
                     with audio_col:
                         st.audio(sample_data['URL'], format='audio/wav')
