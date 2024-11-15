@@ -430,12 +430,16 @@ def main():
 
         def style_function(feature):
             district_name = feature['properties']['district']
+            # Check if this is the clicked district
+            is_clicked = district_name == st.session_state.clicked_district
+            
             if district_name in data[selected_model]:
                 return {
-                    'fillColor': get_color(data[selected_model][district_name]['WER']),
+                    'fillColor': '#ff000066' if is_clicked else get_color(data[selected_model][district_name]['WER']),
                     'color': 'black',
-                    'weight': 1,
-                    'fillOpacity': 0.7
+                    'weight': 3 if is_clicked else 1,
+                    'fillOpacity': 0.9 if is_clicked else 0.7,
+                    'dashArray': '5, 5' if is_clicked else None
                 }
             return {
                 'fillColor': '#CCCCCC',
@@ -459,11 +463,15 @@ def main():
         ).add_to(mask)
         
         mask.add_to(m)
-
+        
         districts = folium.GeoJson(
             karnataka_geojson,
             style_function=style_function,
-            highlight_function=lambda x: {'weight': 3, 'fillOpacity': 0.9},
+            highlight_function=lambda x: {
+                'fillColor': '#ff000066',
+                'weight': 3,
+                'fillOpacity': 0.9
+            } if x['properties']['district'] != st.session_state.clicked_district else {},
             tooltip=folium.GeoJsonTooltip(
                 fields=['district'],
                 aliases=['District:'],
