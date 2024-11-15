@@ -305,7 +305,7 @@ def load_karnataka_geojson() -> Dict[str, Any]:
 def load_data():
     try:
         # Replace this path with your actual JSON file path
-        file_path = DATA_DIR / "sample2.json"
+        file_path = DATA_DIR / "sample3.json"
         with open(file_path, 'r', encoding='utf-8') as f:
             return json.load(f)
     except Exception as e:
@@ -346,6 +346,7 @@ def main():
     if data is None:
         st.error("Failed to load data")
         return
+    
 
     # Create two columns for map and analysis
     map_col, analysis_col = st.columns([4, 2])
