@@ -424,7 +424,7 @@ def main():
     with map_col:
         # WER Thresholds legend
         st.markdown("""
-            <div style="position: absolute; top: 20px; right: 35px; padding: 20px; background-color: var(--secondary-background-color); border-radius: 10px; display: flex; justify-content: space-around; z-index: 1000;">
+            <div style="position: absolute; top: 20px; left: 35px; padding: 20px; background-color: var(--secondary-background-color); border-radius: 10px; display: flex; justify-content: space-around; z-index: 1000;">
                 <div style="display: flex; align-items: center; margin-right: 10px;">
                     <div style="width: 20px; height: 20px; background-color: #00ff00; margin-right: 10px; opacity: 0.7; border: 1px solid var(--text-color);"></div>
                     <span style="color: var(--text-color);">WER ≤ 20%</span>
