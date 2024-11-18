@@ -217,7 +217,7 @@ def add_logo():
                 <a href="https://vaani.iisc.ac.in/" target="_blank" class="title">
                     VAANI
                 </a>
-                <div class="subtitle">How does 'State-of-the-art ASR performance on VAANI data' sound like? </div>
+                <div class="subtitle">State-of-the-art ASR performance on VAANI data</div>
             </div>
             <div class="spacer"></div>
             <img src="data:image/png;base64,{get_base64_encoded_image(logo_iisc)}" alt="IISC Logo">
@@ -447,7 +447,6 @@ def main():
             district_name = feature['properties']['district']
             # Check if this is the clicked district
             is_clicked = district_name == st.session_state.clicked_district
-            
             if district_name in data[selected_model]:
                 return {
                     'fillColor': '#ff000066' if is_clicked else get_color(data[selected_model][district_name]['WER']),
