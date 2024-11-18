@@ -245,7 +245,7 @@ def add_footer():
     logo_google = LOGO_DIR / "google.png"
     logo_bhashini = LOGO_DIR / "bhashini.png"
     logo_bmgf = LOGO_DIR / "bmgf.png"
-    logo_giz = LOGO_DIR / "giz-logo.gif"
+    logo_giz = LOGO_DIR / "giz-logo.png"
     st.markdown(f"""
         <style>
         .footer {{
