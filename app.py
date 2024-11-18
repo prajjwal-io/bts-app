@@ -456,6 +456,9 @@ def main():
             max_lat=KARNATAKA_BOUNDS[1][0],
             min_lon=KARNATAKA_BOUNDS[0][1],
             max_lon=KARNATAKA_BOUNDS[1][1],
+            scrollWheelZoom=False,
+            dragging=False
+
         )
 
         def style_function(feature):
