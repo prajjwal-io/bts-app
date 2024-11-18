@@ -342,6 +342,21 @@ def find_clicked_district(clicked_lat, clicked_lng, geojson_data, model_data):
                 continue
     return None
 
+def add_wer_to_geojson(geojson_data, model_data):
+    #print("First feature properties:", geojson_data['features'][0]['properties'])
+    
+    # Normalize district names
+    for feature in geojson_data['features']:
+        district = feature['properties']['district']
+        district = district.strip().title()  # Normalize format
+        if district in model_data:
+            feature['properties']['wer'] = f"{model_data[district]['WER']}%"
+        else:
+            # Debug print for missing districts
+            #print(f"District not found in model data: {district}")
+            feature['properties']['wer'] = 'N/A'
+    return geojson_data
+
 def main():
     add_logo()
     st.markdown("<h2 style='color: #203454;'>Speech Recognition Performance Analysis on Karnataka map</h2>", unsafe_allow_html=True)
@@ -426,9 +441,9 @@ def main():
         """, unsafe_allow_html=True)
         
         karnataka_geojson = load_karnataka_geojson()
-        if karnataka_geojson is None:
-            st.error("Failed to load Karnataka district boundaries")
-            return
+        if karnataka_geojson:
+            # Add WER data to GeoJSON before creating the map
+            karnataka_geojson = add_wer_to_geojson(karnataka_geojson, data[selected_model])
 
         KARNATAKA_BOUNDS = [[11.5, 74.0], [18.5, 78.5]]
         m = folium.Map(
@@ -448,7 +463,7 @@ def main():
             # Check if this is the clicked district
             is_clicked = district_name == st.session_state.clicked_district
             if district_name in data[selected_model]:
-                return {
+                    return {
                     'fillColor': '#ff000066' if is_clicked else get_color(data[selected_model][district_name]['WER']),
                     'color': 'black',
                     'weight': 3 if is_clicked else 1,
@@ -479,6 +494,7 @@ def main():
         mask.add_to(m)
         
                 
+        # Update the GeoJson creation
         districts = folium.GeoJson(
             karnataka_geojson,
             style_function=style_function,
@@ -488,8 +504,8 @@ def main():
                 'fillOpacity': 0.9
             } if x['properties']['district'] != st.session_state.clicked_district else {},
             tooltip=folium.GeoJsonTooltip(
-                fields=['district', ],
-                aliases=['District:' , ],
+                fields=['district', 'wer'],
+                aliases=['District:', 'WER:'],
                 style=("background-color: white; color: #333333; font-family: arial; font-size: 12px; padding: 10px;")
             )
         ).add_to(m)
