@@ -196,6 +196,12 @@ def add_logo():
             color: #0056b3;
             text-decoration: none;
         }}
+        .navbar .subtitle {{
+            font-size: 20px;
+            color: var(--text-color);
+            font-family: Arial, sans-serif;
+            margin-top: -10px;
+        }}
         .navbar .spacer {{
             flex-grow: 1;
         }}
@@ -207,9 +213,12 @@ def add_logo():
         
         <!-- Navbar -->
         <div class="navbar">
-            <a href="https://vaani.iisc.ac.in/" target="_blank" class="title">
-                VAANI
-            </a>
+            <div>
+                <a href="https://vaani.iisc.ac.in/" target="_blank" class="title">
+                    VAANI
+                </a>
+                <div class="subtitle">How does 'State-of-the-art ASR performance on VAANI data' sound like? </div>
+            </div>
             <div class="spacer"></div>
             <img src="data:image/png;base64,{get_base64_encoded_image(logo_iisc)}" alt="IISC Logo">
             <a href="https://artpark.in/language-data-ai" target="_blank">
@@ -335,7 +344,10 @@ def find_clicked_district(clicked_lat, clicked_lng, geojson_data, model_data):
 
 def main():
     add_logo()
-    st.markdown("<h1 style='color: #203454;'>WER Analysis on Karnataka map</h1>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color: #203454;'>Speech Recognition Performance Analysis on Karnataka map</h2>", unsafe_allow_html=True)
+    #add small description
+    st.markdown("<p style='color: #203454;'>Automatic speech recognition performance is computed using <a href='https://en.wikipedia.org/wiki/Word_error_rate' target='_blank' style='color: #00B4FF;'>Word Error Rate (WER)</a>.</p>", unsafe_allow_html=True)
+    
     
     if 'clicked_district' not in st.session_state:
         st.session_state.clicked_district = None
@@ -352,15 +364,18 @@ def main():
     map_col, analysis_col = st.columns([4, 2])
 
     with analysis_col:
-        selected_model = st.selectbox(
-            "Select Model",
-            options=list(data.keys())
-        )
-        
+
         st.subheader("Data Summary")
         st.write(f"Models: {len(data)}")
-        st.write(f"Districts: {len(data[selected_model])}")
-        
+        st.write(f"Districts: {len(data['AWS'])}")
+
+        model_options = list(data.keys())
+        selected_model = st.selectbox(
+            "Select Model",
+            options=model_options,
+            index=len(model_options) - 1
+        )
+                
         if st.session_state.clicked_district:
             default_ix = list(data[selected_model].keys()).index(st.session_state.clicked_district)
         else:
@@ -390,26 +405,26 @@ def main():
                 unsafe_allow_html=True
             )
         
+
+    with map_col:
         # WER Thresholds legend
         st.markdown("""
-            <div style="padding: 5px; background-color: var(--secondary-background-color); border-radius: 10px; margin-top: 10px;">
-                <h5 style="margin-bottom: 10px;">WER Thresholds</h5>
-                <div style="margin: 10px 0;">
-                    <div style="display: inline-block; width: 20px; height: 20px; background-color: #00ff00; margin-right: 10px; vertical-align: middle; opacity: 0.7; border: 1px solid var(--text-color);"></div>
+            <div style="position: absolute; top: 20px; right: 35px; padding: 20px; background-color: var(--secondary-background-color); border-radius: 10px; display: flex; justify-content: space-around; z-index: 1000;">
+                <div style="display: flex; align-items: center; margin-right: 10px;">
+                    <div style="width: 20px; height: 20px; background-color: #00ff00; margin-right: 10px; opacity: 0.7; border: 1px solid var(--text-color);"></div>
                     <span style="color: var(--text-color);">WER ≤ 20%</span>
                 </div>
-                <div style="margin: 10px 0;">
-                    <div style="display: inline-block; width: 20px; height: 20px; background-color: #ffa500; margin-right: 10px; vertical-align: middle; opacity: 0.7; border: 1px solid var(--text-color);"></div>
+                <div style="display: flex; align-items: center; margin-right: 10px;">
+                    <div style="width: 20px; height: 20px; background-color: #ffa500; margin-right: 10px; opacity: 0.7; border: 1px solid var(--text-color);"></div>
                     <span style="color: var(--text-color);">20% < WER ≤ 50%</span>
                 </div>
-                <div style="margin: 10px 0;">
-                    <div style="display: inline-block; width: 20px; height: 20px; background-color: #ff0000; margin-right: 10px; vertical-align: middle; opacity: 0.7; border: 1px solid var(--text-color);"></div>
+                <div style="display: flex; align-items: center;">
+                    <div style="width: 20px; height: 20px; background-color: #ff0000; margin-right: 10px; opacity: 0.7; border: 1px solid var(--text-color);"></div>
                     <span style="color: var(--text-color);">WER > 50%</span>
                 </div>
             </div>
         """, unsafe_allow_html=True)
-
-    with map_col:
+        
         karnataka_geojson = load_karnataka_geojson()
         if karnataka_geojson is None:
             st.error("Failed to load Karnataka district boundaries")
@@ -464,6 +479,7 @@ def main():
         
         mask.add_to(m)
         
+                
         districts = folium.GeoJson(
             karnataka_geojson,
             style_function=style_function,
@@ -473,8 +489,8 @@ def main():
                 'fillOpacity': 0.9
             } if x['properties']['district'] != st.session_state.clicked_district else {},
             tooltip=folium.GeoJsonTooltip(
-                fields=['district'],
-                aliases=['District:'],
+                fields=['district', ],
+                aliases=['District:' , ],
                 style=("background-color: white; color: #333333; font-family: arial; font-size: 12px; padding: 10px;")
             )
         ).add_to(m)
