@@ -302,11 +302,10 @@ def add_footer():
     
 
 def load_karnataka_geojson() -> Dict[str, Any]:
-    url = "https://raw.githubusercontent.com/adarshbiradar/maps-geojson/master/states/karnataka.json"
+    file_path = DATA_DIR / "karnataka.json"
     try:
-        response = requests.get(url)
-        response.raise_for_status()
-        return response.json()
+        with open(file_path, 'r', encoding='utf-8') as f:
+            return json.load(f)
     except Exception as e:
         st.error(f"Error loading Karnataka GeoJSON: {str(e)}")
         return None
