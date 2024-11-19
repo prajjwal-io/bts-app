@@ -173,6 +173,8 @@ def add_logo():
     # Load all logos using absolute paths
     logo_artpark = LOGO_DIR / "ARTPARK.png"
     logo_iisc = LOGO_DIR / "IISC.png"
+    logo_bhashini = LOGO_DIR / "bhashini.png"
+
     
     st.markdown(f"""
         <style>
@@ -206,7 +208,7 @@ def add_logo():
             flex-grow: 1;
         }}
         .navbar img {{
-            max-height: 90px;
+            max-height: 80px;
             width: auto;
         }}
         </style>
@@ -221,6 +223,7 @@ def add_logo():
             </div>
             <div class="spacer"></div>
             <img src="data:image/png;base64,{get_base64_encoded_image(logo_iisc)}" alt="IISC Logo">
+            <img src="data:image/png;base64,{get_base64_encoded_image(logo_bhashini)}" alt="Bhashini Logo" style="max-height: 60px; width: auto; margin-right: 20px;">
             <a href="https://artpark.in/language-data-ai" target="_blank">
                 <img src="data:image/png;base64,{get_base64_encoded_image(logo_artpark)}" alt="ARTPARK Logo">
             </a>
@@ -243,7 +246,6 @@ def add_logo():
 
 def add_footer():
     logo_google = LOGO_DIR / "google.png"
-    logo_bhashini = LOGO_DIR / "bhashini.png"
     logo_bmgf = LOGO_DIR / "bmgf.png"
     logo_giz = LOGO_DIR / "giz-logo.png"
     st.markdown(f"""
@@ -292,7 +294,6 @@ def add_footer():
         <div class="footer">
             <div class="footer-text">Supported By</div>
             <div class="footer-content">
-                <img class="google-logo" src="data:image/png;base64,{base64.b64encode(open(logo_bhashini, 'rb').read()).decode()}" alt="Bhashini Logo">
                 <img class="bhashini-logo" src="data:image/png;base64,{base64.b64encode(open(logo_google, 'rb').read()).decode()}" alt="Google Logo">
                 <img src="data:image/png;base64,{base64.b64encode(open(logo_bmgf, 'rb').read()).decode()}" alt="BMGF Logo">
                 <img src="data:image/png;base64,{base64.b64encode(open(logo_giz, 'rb').read()).decode()}" alt="GIZ Logo">
