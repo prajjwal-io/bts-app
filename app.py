@@ -383,7 +383,7 @@ def main():
         st.subheader("Data Summary")
         st.write(f"Models: {len(data)}")
         st.write(f"Districts: {len(data['AWS'])}")
-        st.write(f"States: {len(available_states)}")
+        st.write(f"States: 12 ")
         
         model_options = list(data.keys())
         selected_model = st.selectbox(
