@@ -303,7 +303,7 @@ def load_state_geojson(state_name: str) -> Dict[str, Any]:
 def load_data():
     """Load sample data for ASR metrics"""
     try:
-        file_path = DATA_DIR / "delhisamplerenamedjson.json"  # Using updated filename from your paste
+        file_path = DATA_DIR / "sample5renamed.json.json" # Using updated filename from your paste
         with open(file_path, 'r', encoding='utf-8') as f:
             return json.load(f)
     except Exception as e:
